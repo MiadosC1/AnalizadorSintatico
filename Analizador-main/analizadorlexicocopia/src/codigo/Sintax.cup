@@ -1,5 +1,4 @@
 package codigo;
-
 import java_cup.runtime.Symbol;
 
 parser code
@@ -12,14 +11,16 @@ parser code
 
     public Symbol getS(){
         return this.s;
-}
+    }
 :};
 
-terminal Pregunta, Contrario, Comparar, Identificador, Literal, Numero, Operaciones, Tipodato,
+/*Ricardo Ibarra Garcia 22211585*/
+
+terminal Linea, Pregunta, Contrario, Comparar, Identificador, Literal, Operaciones, Tipodato,
     Acceso, ControlFlujo, Constantes, OperadoresEspeciales, ManejoErrores, Reservadas,
     Asignacion, Incremento, Decremento, Punto, Logico, Bits, Relacional, Funciones, Clases,
     Excepciones, EspacioNombre, Herencia, Modificadores, Variables, Ciclos, Condiciones,
-    E_S, Require, Punteros, Genericos, Concurrencia, OtrosReservados, Aserciones,
+    ES, Require, Punteros, Genericos, Concurrencia, OtrosReservados, Aserciones,
     Comentarios, TipadoDebil, EstructurasAdicionales, Streams, Metaprogramacion, 
     OtrosValores, Alias, Seguridad, ManejoMemoria, Archivos, Redes, Web, Contexpr,
     Conceptos, Sincronizacion, Basededatos, Vectores, FuncionesEspeciales, CiclosEspeciales,
@@ -28,89 +29,83 @@ terminal Pregunta, Contrario, Comparar, Identificador, Literal, Numero, Operacio
     LiteralesEspeciales, Serializacion, Tiempo, Random, Recursos, Logs, Enums, Declaraciones,
     Generadores, Modularizacion, OperacionesMatematicas, Matrices, Compilacion, Versiones, 
     Git, SeguridadWeb, Anotaciones, Proxies, Reflexion, Identificiadores, NumeroEntero,
-    NumeroDecimal, NumerosHexadecimal, Caracter, Cadena, EnlaceExterno, LlaveApertura, LlaveCerradura,
+    NumeroDecimal, NumeroHexadecimal, Caracter, Cadena, EnlaceExterno, LlaveApertura, LlaveCerradura,
     ParentesisApertura, ParentesisCerradura, CorcheteApertura, CorcheteCerradura, Delimitador, ERROR;
 
-non terminal SENTENCIA, ESPACIO, VARIABLE, FUNCIONES, CONDICIONPREGUNTA, CICLOPARA, IMPRESION, INICIAR, DECISION, MIENTRAS;
-
-start with SENTENCIA;
-
-SENTENCIA ::= ESPACIO | VARIABLE | FUNCIONES | CONDICIONPREGUNTA | CICLOPARA | IMPRESION | INICIAR | DECISION | MIENTRAS;
+non terminal INSTRUCCION, GRAMATICA, IMPRIMIDA, VARIABLE, INICIAR, DECISION, COMPARADOR, MIENTRAS, CONDICIONPREGUNTA, ESPACIO, CICLOPARA;
 
 
-ESPACIO ::= Acceso Modificadores Identificador LlaveApertura SENTENCIA LlaveCerradura;
+start with GRAMATICA;
+
+
+GRAMATICA ::= IMPRIMIDA
+              |VARIABLE
+              |INICIAR
+              |DECISION
+              |COMPARADOR
+              |MIENTRAS
+              |CONDICIONPREGUNTA
+              |ESPACIO
+              |CICLOPARA
+              ;
+
+/*print("Ricardo");*/
+IMPRIMIDA ::= ES ParentesisApertura Literal ParentesisCerradura Delimitador
+;
+
+/*Int edad = 25;|string nombre = "Ricardo";*/
+VARIABLE ::= Tipodato Identificador Asignacion (NumeroEntero|Literal) Delimitador            
+;
+
+/*Int main()
+{
+    GRAMATICA
+}*/
+INICIAR ::= Tipodato FuncionesEspeciales ParentesisApertura ParentesisCerradura LlaveApertura GRAMATICA LlaveCerradura;
+
+/*
+true
+x >= 10
+x == y
+*/
+DECISION ::= Logico|COMPARADOR (NumeroEntero|Identificador);
+
+/*
+x >=
+x ==
+*/
+COMPARADOR ::= Identificador Comparar;
+
+
+/*
+while (x < 10)
+{
+    GRAMATICA
+}
+*/
+MIENTRAS ::= Ciclos ParentesisApertura COMPARADOR NumeroEntero ParentesisCerradura LlaveApertura GRAMATICA LlaveCerradura;
+
+
+/*if (edad > 18)
+{
+    GRAMATICA
+}
+*/
+CONDICIONPREGUNTA ::= Pregunta ParentesisApertura COMPARADOR NumeroEntero ParentesisCerradura LlaveApertura GRAMATICA LlaveCerradura;
 
 /* public class MiClase
 {
     SENTENCIA
 }
 */
+ESPACIO ::= Acceso Reservadas Identificador LlaveApertura GRAMATICA LlaveCerradura;
 
-VARIABLE ::= Tipodato Identificador Asignacion Cadena Delimitador;
-
-/*String nombre = "Juan";*/
-
-FUNCIONES ::= Tipodato Identificador ParentesisApertura ParentesisCerradura LlaveApertura SENTENCIA LlaveCerradura;
-
-/*int sumar()
+/*for (Int i = 0; i < 10; i++)
 {
     SENTENCIA
 }
 */
-
-CONDICIONPREGUNTA ::= Pregunta ParentesisApertura Identificador Comparar NumeroDecimal ParentesisCerradura LlaveApertura SENTENCIA LlaveCerradura;
-
-/*if (edad > 18)
-{
-    SENTENCIA
-}
-*/
-    
 CICLOPARA ::= Ciclos ParentesisApertura Tipodato Identificador Asignacion NumeroEntero Delimitador Identificador Comparar NumeroEntero Delimitador 
-               Identificador Incremento ParentesisCerradura LlaveApertura SENTENCIA LlaveCerradura;
-
-/*for (int i = 0; i < 10; i++)
-{
-    SENTENCIA
-}
-*/
-
-IMPRESION ::= E_S ParentesisApertura Cadena ParentesisCerradura Delimitador;
-
-/*print("Hola mundo");*/
-
-INICIO ::= Tipodato Identificador ParentesisApertura ParentesisCerradura LlaveApertura SENTENCIA LlaveCerradura;
-
-/*int main()
-{
-    SENTENCIA
-}*/
+               Identificador Incremento ParentesisCerradura LlaveApertura GRAMATICA LlaveCerradura;
 
 
-DECISION ::=         Logico
-                     | Identificador Comparar Numero
-                     | Identificador Comparar Identificador
-                     | Identificador Comparar Literal
-                     | Identificador Comparar Cadena
-                     ;
-/*
-true                   
-x >= 10                      
-x == y                        
-texto == ""                  
-texto == "mensaje" 
-*/
-
-
-EMPEZAR ::= FuncionesEspeciales Identificador Delimitador;
-
-/*start with INICIO;*/
-
-
-MIENTRAS ::= Ciclos ParentesisApertura DECISION ParentesisCerradura LlaveApertura SENTENCIA LlaveCerradura;
-
-/*while (x < 10)
-{
-    SENTENCIA
-}
-*/
