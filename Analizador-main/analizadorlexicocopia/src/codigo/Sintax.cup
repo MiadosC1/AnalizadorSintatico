@@ -32,25 +32,34 @@ terminal Linea, Pregunta, Contrario, Comparar, Identificador, Literal, Operacion
     NumeroDecimal, NumeroHexadecimal, Caracter, Cadena, EnlaceExterno, LlaveApertura, LlaveCerradura,
     ParentesisApertura, ParentesisCerradura, CorcheteApertura, CorcheteCerradura, Delimitador, ERROR;
 
-non terminal INSTRUCCION, GRAMATICA, IMPRIMIDA, VARIABLE, INICIAR, DECISION, COMPARADOR, MIENTRAS, CONDICIONPREGUNTA, ESPACIO, CICLOPARA;
+non terminal GRAMATICA, INSTRUCCION, IMPRIMIDA, ORACION, VARIABLE, INICIAR, INSTRUCCIONES, DECISION, COMPARADOR, MIENTRAS, CONDICIONADOR, CONDICIONPREGUNTA, ESPACIO, CICLOPARA, CONTADOR;
 
 
 start with GRAMATICA;
 
+GRAMATICA ::= INSTRUCCION GRAMATICA
+            | /* empty */
+            ;
 
-GRAMATICA ::= IMPRIMIDA
+INSTRUCCION ::= IMPRIMIDA
+              |ORACION
               |VARIABLE
               |INICIAR
+              |INSTRUCCIONES
               |DECISION
               |COMPARADOR
               |MIENTRAS
+              |CONDICIONADOR
               |CONDICIONPREGUNTA
               |ESPACIO
               |CICLOPARA
+              |CONTADOR
               ;
 
 /*print("Ricardo");*/
-IMPRIMIDA ::= ES ParentesisApertura Literal ParentesisCerradura Delimitador
+IMPRIMIDA ::= ES ORACION Delimitador
+;
+ORACION ::= ParentesisApertura Literal ParentesisCerradura
 ;
 
 /*Int edad = 25;|string nombre = "Ricardo";*/
@@ -61,8 +70,10 @@ VARIABLE ::= Tipodato Identificador Asignacion (NumeroEntero|Literal) Delimitado
 {
     GRAMATICA
 }*/
-INICIAR ::= Tipodato FuncionesEspeciales ParentesisApertura ParentesisCerradura LlaveApertura GRAMATICA LlaveCerradura;
-
+INICIAR ::= Tipodato FuncionesEspeciales ParentesisApertura ParentesisCerradura INSTRUCCIONES
+;
+INSTRUCCIONES ::= LlaveApertura GRAMATICA LlaveCerradura
+;
 /*
 true
 x >= 10
@@ -76,36 +87,42 @@ x ==
 */
 COMPARADOR ::= Identificador Comparar;
 
-
-/*
-while (x < 10)
-{
-    GRAMATICA
-}
-*/
-MIENTRAS ::= Ciclos ParentesisApertura COMPARADOR NumeroEntero ParentesisCerradura LlaveApertura GRAMATICA LlaveCerradura;
-
-
 /*if (edad > 18)
 {
     GRAMATICA
 }
 */
-CONDICIONPREGUNTA ::= Pregunta ParentesisApertura COMPARADOR NumeroEntero ParentesisCerradura LlaveApertura GRAMATICA LlaveCerradura;
+CONDICIONPREGUNTA ::= Pregunta ParentesisApertura COMPARADOR NumeroEntero ParentesisCerradura INSTRUCCIONES
+;
+
+
+/*
+while (menor < 18)
+{
+    GRAMATICA
+}
+*/
+MIENTRAS ::= Ciclos CONDICIONADOR INSTRUCCIONES
+;
+CONDICIONADOR ::= ParentesisApertura COMPARADOR NumeroEntero ParentesisCerradura
+;
 
 /* public class MiClase
 {
-    SENTENCIA
+    GRAMATICA
 }
 */
-ESPACIO ::= Acceso Reservadas Identificador LlaveApertura GRAMATICA LlaveCerradura;
+ESPACIO ::= Acceso Reservadas Identificador INSTRUCCIONES
+;
 
 /*for (Int i = 0; i < 10; i++)
 {
-    SENTENCIA
+    GRAMATICA
 }
 */
-CICLOPARA ::= Ciclos ParentesisApertura Tipodato Identificador Asignacion NumeroEntero Delimitador Identificador Comparar NumeroEntero Delimitador 
-               Identificador Incremento ParentesisCerradura LlaveApertura GRAMATICA LlaveCerradura;
+CICLOPARA ::= Ciclos CONTADOR INSTRUCCIONES;
 
+CONTADOR ::= ParentesisApertura Tipodato Identificador Asignacion NumeroEntero Delimitador Identificador Comparar NumeroEntero Delimitador 
+             Identificador Incremento ParentesisCerradura
+;
 

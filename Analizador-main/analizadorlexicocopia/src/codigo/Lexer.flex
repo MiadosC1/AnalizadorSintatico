@@ -32,7 +32,8 @@ espacio=[ ,\t,\r,\n]+
 (")" )                         { lexeme=yytext(); return ParentesisCerradura; }
 ("[" )                         { lexeme=yytext(); return CorcheteApertura; }
 ("]" )                         { lexeme=yytext(); return CorcheteCerradura; }
-(";")                         { lexeme=yytext(); return Delimitador; }
+(";")                          { lexeme=yytext(); return Delimitador; }
+( "\n" )                       {return Linea;}
 
 (Int|float|double|bool|char|string|var|dynamic)  
                                { lexeme=yytext(); return Tipodato; }
