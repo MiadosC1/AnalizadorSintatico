@@ -1,0 +1,118 @@
+package codigo;
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+:};
+
+/*Ricardo Ibarra Garcia 22211585*/
+
+terminal Linea, Pregunta, Contrario, Comparar, Identificador, Literal, Operaciones, Tipodato,
+    Acceso, ControlFlujo, Constantes, OperadoresEspeciales, ManejoErrores, Reservadas,
+    Asignacion, Incremento, Decremento, Punto, Logico, Bits, Relacional, Funciones, Clases,
+    Excepciones, EspacioNombre, Herencia, Modificadores, Variables, Ciclos, Condiciones,
+    ES, Require, Punteros, Genericos, Concurrencia, OtrosReservados, Aserciones,
+    Comentarios, TipadoDebil, EstructurasAdicionales, Streams, Metaprogramacion, 
+    OtrosValores, Alias, Seguridad, ManejoMemoria, Archivos, Redes, Web, Contexpr,
+    Conceptos, Sincronizacion, Basededatos, Vectores, FuncionesEspeciales, CiclosEspeciales,
+    TiposEspeciales, Otros, EscrituraPantalla, FinalizarPrograma, Opcionales, Iteradores,
+    Conversiones, CodigosRetorno, Estados, EstructuraCondicional, VariablesEspeciales,
+    LiteralesEspeciales, Serializacion, Tiempo, Random, Recursos, Logs, Enums, Declaraciones,
+    Generadores, Modularizacion, OperacionesMatematicas, Matrices, Compilacion, Versiones, 
+    Git, SeguridadWeb, Anotaciones, Proxies, Reflexion, Identificiadores, NumeroEntero,
+    NumeroDecimal, NumeroHexadecimal, Caracter, Cadena, EnlaceExterno, LlaveApertura, LlaveCerradura,
+    ParentesisApertura, ParentesisCerradura, CorcheteApertura, CorcheteCerradura, Delimitador, ERROR;
+
+non terminal PROGRAMA, LIBRERIA, CLASE, INICIAR, INSTRUCCIONESOPCIONES, INSTRUCCION, INSTRUCCIONES, IMPRIMIDA, ORACION, VARIABLE, DATO, CONDICIONCOMPARACION,COMPARADOR, CONDICIONPREGUNTA, MIENTRAS, CONDICIONADOR, CICLOPARA, CONTADOR;
+
+
+start with PROGRAMA;
+
+PROGRAMA ::= LIBRERIA CLASE
+;
+
+/*using System*/
+LIBRERIA ::= Require Identificador
+;
+
+/* public class MiClase
+{
+    Int main()
+{
+    
+}
+}
+*/
+CLASE ::= Acceso Reservadas Identificador LlaveApertura INICIAR LlaveCerradura
+;
+
+/*Int main()
+{
+    INSTRUCCIONESOPCIONES
+}*/
+INICIAR ::= Tipodato FuncionesEspeciales ParentesisApertura ParentesisCerradura LlaveApertura INSTRUCCIONESOPCIONES LlaveCerradura
+;
+
+INSTRUCCIONESOPCIONES ::= INSTRUCCIONES|CONDICIONPREGUNTA|MIENTRAS|CICLOPARA
+;
+/*
+x >=
+x ==
+*/
+COMPARADOR ::= Identificador Comparar;
+
+/*if (edad > 18)
+{
+    INSTRUCCIONES
+}
+*/
+CONDICIONPREGUNTA ::= Pregunta ParentesisApertura COMPARADOR NumeroEntero ParentesisCerradura LlaveApertura INSTRUCCIONES LlaveCerradura
+;
+
+
+/*
+while (menor < 18)
+{
+    INSTRUCCIONES
+}
+*/
+MIENTRAS ::= Ciclos CONDICIONADOR INSTRUCCIONES
+;
+CONDICIONADOR ::= ParentesisApertura COMPARADOR NumeroEntero ParentesisCerradura
+;
+
+/*for (Int i = 0; i < 10; i++)
+{
+    INSTRUCCIONES
+}
+*/
+CICLOPARA ::= Ciclos CONTADOR LlaveApertura INSTRUCCIONES LlaveCerradura;
+
+CONTADOR ::= ParentesisApertura Tipodato Identificador Asignacion NumeroEntero Delimitador Identificador Comparar NumeroEntero Delimitador 
+             Identificador Incremento ParentesisCerradura
+;
+
+INSTRUCCIONES ::= IMPRIMIDA|VARIABLE
+;
+/*print("Ricardo");*/
+IMPRIMIDA ::= ES ORACION Delimitador
+;
+ORACION ::= ParentesisApertura Literal ParentesisCerradura
+;
+
+/*Int edad = 25;|string nombre = "Ricardo";*/
+VARIABLE ::= Tipodato Identificador Asignacion DATO Delimitador      
+;
+DATO ::= NumeroEntero|Literal|NumeroDecimal
+;
+
+

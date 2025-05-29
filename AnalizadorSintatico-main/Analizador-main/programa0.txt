@@ -1,0 +1,11 @@
+using system
+public class miclase
+{
+Int main()
+{
+for (Int i = 0; i < 10; i++)
+{
+    print("Contador");
+}
+}
+}
